@@ -103,7 +103,7 @@ class KubaGame:
         """
         copy_board = [list(row) for row in self._board]     # makes a deep copy of the board for testing
         captured_red = False    # used to determine if a red marble is captured
-        # knocked_off_opponent = False (not used)
+        knocked_off_opponent = False    # used to determine if opponent marble is knocked off
 
         if direction == 'L':
             if column == 6 or copy_board[row][column+1] == 'X':     # checks if space is available for pushing
@@ -112,8 +112,8 @@ class KubaGame:
                         return False
                     elif copy_board[row][0] == 'R':     # checks if marble to be knocked off is red
                         captured_red = True
-                    # elif copy_board[row][0] == opponent.get_color():  (not used)
-                    #     knocked_off_opponent = True   (not used)
+                    elif copy_board[row][0] == opponent.get_color():
+                        knocked_off_opponent = True     # checks if marble to be knocked off belongs to opponent
                     copy_board[row][0] = 'X'            # replace knocked off marble with empty space
                 # moves all consecutive marbles until an empty space is reached
                 prev = None
@@ -134,8 +134,8 @@ class KubaGame:
                         return False
                     elif copy_board[row][6] == 'R':     # checks if marble to be knocked off is red
                         captured_red = True
-                    # elif copy_board[row][6] == opponent.get_color():  (not used)
-                    #     knocked_off_opponent = True    (not used)
+                    elif copy_board[row][6] == opponent.get_color():
+                        knocked_off_opponent = True     # checks if marble to be knocked off belongs to opponent
                     copy_board[row][6] = 'X'    # replace knocked off marble with empty space
                 # moves all consecutive marbles until an empty space is reached
                 prev = None
@@ -156,8 +156,8 @@ class KubaGame:
                         return False
                     elif copy_board[0][column] == 'R':      # checks if marble to be knocked off is red
                         captured_red = True
-                    # elif copy_board[0][column] == opponent.get_color():    (not used)
-                    #     knocked_off_opponent = True       (not used)
+                    elif copy_board[0][column] == opponent.get_color():
+                        knocked_off_opponent = True         # checks if marble to be knocked off belongs to opponent
                     copy_board[0][column] = 'X'     # replace knocked off marble with empty space
                 # moves all consecutive marbles until an empty space is reached
                 prev = None
@@ -178,8 +178,8 @@ class KubaGame:
                         return False
                     elif copy_board[6][column] == 'R':      # checks if marble to be knocked off is red
                         captured_red = True
-                    # elif copy_board[6][column] == opponent.get_color():   (not used)
-                    #     knocked_off_opponent = True       (not used)
+                    elif copy_board[6][column] == opponent.get_color():
+                        knocked_off_opponent = True         # checks if marble to be knocked off belongs to opponent
                     copy_board[6][column] = 'X'
                 # moves all consecutive marbles until an empty space is reached
                 prev = None
@@ -203,11 +203,11 @@ class KubaGame:
                 self._board = copy_board                # sets the current state to the copy state
                 if captured_red:
                     player.add_red_marble()       # if a red marble was captured, add to player's red marble count
-                    # self._current_turn = player.get_name()
-                # elif knocked_off_opponent:
-                #     self._current_turn = player.get_name()
-                # else:
-                self._current_turn = opponent.get_name()    # changes turn
+                    self._current_turn = player.get_name()  # repeat turn if red marble is captured
+                elif knocked_off_opponent:
+                    self._current_turn = player.get_name()  # repeat turn if opponent marble is knocked off
+                else:
+                    self._current_turn = opponent.get_name()    # changes turn
             return True
 
     def check_all_moves(self, player, opponent):
